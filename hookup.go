@@ -5,7 +5,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/thisisfineio/common"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"errors"
 )
 
 
