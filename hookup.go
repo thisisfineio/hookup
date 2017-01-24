@@ -11,6 +11,7 @@ import (
 
 
 type DirectConnect interface {
+	Provider() int
 	DescribeDirectConnects(*DescribeDirectConnectsInput) (*DescribeDirectConnectsOutput, error)
 }
 
@@ -22,16 +23,12 @@ type DescribeDirectConnectsOutput struct {
 
 }
 
-var (
-	NoValidProviderErr = errors.New("hookup: No valid provider was given to NewDirectConnect()")
-)
-
 func NewDirectConnect(provider int, region string) (DirectConnect, error) {
 	switch provider {
 	case common.AwsProvider:
 		return DirectConnect(NewAwsDirectConnect(region)), nil
 	}
-	return nil, NoValidProviderErr
+	return nil, common.InvalidProviderErr("NewDirectConnect", "hookup")
 }
 
 func NewAwsDirectConnectWithConfig(c *aws.Config) *AwsDirectConnect {
@@ -48,4 +45,8 @@ func NewAwsDirectConnect(region string) *AwsDirectConnect {
 
 func (a *AwsDirectConnect) DescribeDirectConnects(input *DescribeDirectConnectsInput) (*DescribeDirectConnectsOutput, error) {
 	return nil, nil
+}
+
+func (a *AwsDirectConnect) Provider() int {
+	return common.AwsProvider
 }
